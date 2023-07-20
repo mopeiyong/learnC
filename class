@@ -1,1 +1,102 @@
+C++类定义
+
+class classname  //关键字 类名
+{
+	Access specifiers:	//访问修饰符：private/public/protected
+		Date members/variables;		//变量
+		Member functions(){}	//方法
+};	//分号结束一个类
+
+类成员函数
+	范围解析运算符 ::
+	实例
+	#include <iostream>
+ 
+	using namespace std;
+ 
+	class Box
+	{
+   		public:
+      			double length;         // 长度
+      			double breadth;        // 宽度
+      			double height;         // 高度
+ 
+      // 成员函数声明
+      			double getVolume(void);
+      			void setLength( double len );
+     			void setBreadth( double bre );
+      			void setHeight( double hei );
+	};
+ 
+	// 成员函数定义
+	double Box::getVolume(void)
+	{
+	    return length * breadth * height;
+	}
+ 
+	void Box::setLength( double len )
+	{
+	    length = len;
+	}
+ 
+	void Box::setBreadth( double bre )
+	{
+	    breadth = bre;
+	}
+ 
+	void Box::setHeight( double hei )
+	{
+	    height = hei;
+	}
+ 
+	// 程序的主函数
+	int main( )
+	{
+	   Box Box1;                // 声明 Box1，类型为 Box
+	   Box Box2;                // 声明 Box2，类型为 Box
+	   double volume = 0.0;     // 用于存储体积
+ 
+	   // box 1 详述
+	   Box1.setLength(6.0); 
+	   Box1.setBreadth(7.0); 
+	   Box1.setHeight(5.0);
+ 
+	   // box 2 详述
+	   Box2.setLength(12.0); 
+	   Box2.setBreadth(13.0); 
+	   Box2.setHeight(10.0);
+ 
+	   // box 1 的体积
+	   volume = Box1.getVolume();
+	   cout << "Box1 的体积：" << volume <<endl;
+ 
+	   // box 2 的体积
+	   volume = Box2.getVolume();
+	   cout << "Box2 的体积：" << volume <<endl;
+	   return 0;
+	}
+
+	当上面的代码被编译和执行时，它会产生下列结果：
+	Box1 的体积： 210
+	Box2 的体积： 1560
+类访问修饰符
+	class Base {
+	   public:
+	  // 公有成员：在程序中类的外部是可访问的。您可以不使用任何成员函数来设置和获取公有变量的值
+	   protected:
+	  // 受保护成员：protected（受保护）成员变量或函数与私有成员十分相似，但有一点不同，protected（受保护）成员在派生类（即子类）中是可访问的。
+	   private:
+  	  // 私有成员：私有成员变量或函数在类的外部是不可访问的，甚至是不可查看的。只有类和友元函数可以访问私有成员。默认情况下，类的所有成员都是私有的。
+	};
+类构造函数 & 析构函数
+	类的构造函数是类的一种特殊的成员函数，它会在每次创建类的新对象时执行。构造函数的名称与类的名称是完全相同的，并且不会返回任何类型，也不会返回 void。构造函数可用于为某些成员变量设置初始值。
+	类的析构函数是类的一种特殊的成员函数，它会在每次删除所创建的对象时执行。析构函数的名称与类的名称是完全相同的，只是在前面加了个波浪号（~）作为前缀，它不会返回任何值，也不能带有任何参数。析构函数有助于在跳出程序（比如关闭文件、释放内存等）前释放资源。
+
+	class Line
+	{
+   		public:
+   			Line();  // 这是构造函数
+			~Line(); // 这是析构函数
+	};
+
 
