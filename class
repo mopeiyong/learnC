@@ -1,3 +1,5 @@
+https://www.runoob.com/cplusplus/cpp-copy-constructor.html
+
 C++类定义
 
 class classname  //关键字 类名
@@ -98,5 +100,4 @@ class classname  //关键字 类名
    			Line();  // 这是构造函数
 			~Line(); // 这是析构函数
 	};
-
 
