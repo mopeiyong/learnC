@@ -1,0 +1,213 @@
+C++ 中的函数重载
+	在同一个作用域内，可以声明几个功能类似的同名函数，但是这些同名函数的形式参数（指参数的个数、类型或者顺序）必须不同。您不能仅通过返回类型的不同来重载函数。
+	下面的实例中，同名函数 print() 被用于输出不同的数据类型：
+	#include <iostream>
+	using namespace std; 
+	class printData
+	{
+	   public:
+	      void print(int i) {
+	        cout << "整数为: " << i << endl;
+	      }
+ 
+	      void print(double  f) {
+	      		cout << "浮点数为: " << f << endl;
+	      }
+ 		void print(char c[]) {
+		      cout << "字符串为: " << c << endl;
+	      }
+	};
+ 
+	int main(void)
+	{
+	   printData pd;
+ 
+	   // 输出整数
+	   pd.print(5);
+	   // 输出浮点数
+	   pd.print(500.263);
+	   // 输出字符串
+	   char c[] = "Hello C++";
+	   pd.print(c);
+	   return 0;
+	}
+	当上面的代码被编译和执行时，它会产生下列结果：
+	整数为: 5
+	浮点数为: 500.263
+	字符串为: Hello C++
+
+C++ 中的运算符重载
+	operator
+	您可以重定义或重载大部分 C++ 内置的运算符。这样，您就能使用自定义类型的运算符。
+	重载的运算符是带有特殊名称的函数，函数名是由关键字 operator 和其后要重载的运算符符号构成的。与其他函数一样，重载运算符有一个返回类型和一个参数列表。
+	Box operator+(const Box&);
+	声明加法运算符用于把两个 Box 对象相加，返回最终的 Box 对象。大多数的重载运算符可被定义为普通的非成员函数或者被定义为类成员函数。如果我们定义上面的函数为类的非成员函数，那么我们需要为每次操作传递两个参数，如下所示：
+	Box operator+(const Box&, const Box&);
+
+一元运算符重载
+	一元运算符通常出现在它们所操作的对象的左边，比如 !obj、-obj 和 ++obj，但有时它们也可以作为后缀，比如 obj++ 或 obj--。
+	重载单目运算符++（或 --)作为前缀和后缀：
+	前缀与后缀重载的语法格式是不同的。
+	//前缀自增
+	class class::operator ++() {
+		++i;
+ 		++j;
+   	 	return *this;
+	}
+	//后缀自增，参数需要加int
+	class class::operator ++(int) {
+	    class temp =*this;
+	    ++*this;
+	    return temp;
+	}
+	在前缀递增时，若想要实现 ++(++a) 这种连续自加，就要返回其对象的引用，这样才能保证操作的是同一块内存空间，否则就只是单纯的赋值操作，原来的对象并未被修改。
+	class& class::operator ++() {
+                ++i;
+                ++j;
+                return *this;
+        }
+
+二元运算符重载
+	二元运算符需要两个参数，下面是二元运算符的实例。我们平常使用的加运算符（ + ）、减运算符（ - ）、乘运算符（ * ）和除运算符（ / ）都属于二元运算符。就像加(+)运算符。
+	Box operator+(const Box&);
+        声明加法运算符用于把两个 Box 对象相加，返回最终的 Box 对象。大多数的重载运算符可被定义为普
+通的非成员函数或者被定义为类成员函数。如果我们定义上面的函数为类的非成员函数，那么我们需要为每次操
+作传递两个参数，如下所示：
+        Box operator+(const Box&, const Box&);
+
+关系运算符重载
+	C++ 语言支持各种关系运算符（ < 、 > 、 <= 、 >= 、 == 等等），它们可用于比较 C++ 内置的数据类型。您可以重载任何一个关系运算符，重载后的关系运算符可用于比较类的对象。
+
+++ 和 -- 运算符重载
+	递增运算符（ ++ ）和递减运算符（ -- ）是 C++ 语言中两个重要的一元运算符。
+	//前缀自增
+        class class::operator ++() {
+                ++i;
+                ++j;
+                return *this;
+        }
+        //后缀自增，参数需要加int
+        class class::operator ++(int) {
+            class temp =*this;
+            ++*this;
+            return temp;
+        }
+	注意，int 在 括号内是为了向编译器说明这是一个后缀形式，而不是表示整数。
+	前缀形式重载调用 Check operator ++ () ，后缀形式重载调用 operator ++ (int)。
+
+赋值运算符重载
+	就像其他运算符一样，您可以重载赋值运算符（ = ），用于创建一个对象，比如拷贝构造函数。
+
+函数调用运算符 () 重载
+	函数调用运算符 () 可以被重载用于类的对象。当重载 () 时，您不是创造了一种新的调用函数的方式，相反地，这是创建一个可以传递任意数目参数的运算符函数。
+	下面的实例演示了如何重载函数调用运算符 ()。
+	#include <iostream>
+	using namespace std;
+	class Distance
+	{
+	   private:
+	      int feet;             // 0 到无穷
+	      int inches;           // 0 到 12
+	   public:
+	      // 所需的构造函数
+	      Distance(){
+	         feet = 0;
+	         inches = 0;
+	      }
+	      Distance(int f, int i){
+	         feet = f;
+	         inches = i;
+	      }
+	      // 重载函数调用运算符
+	      Distance operator()(int a, int b, int c)
+	      {
+	         Distance D;
+	         // 进行随机计算
+	         D.feet = a + c + 10;
+	         D.inches = b + c + 100 ;
+	         return D;
+	      }
+	      // 显示距离的方法
+	      void displayDistance()
+	      {
+	         cout << "F: " << feet <<  " I:" <<  inches << endl;
+	      }	
+
+	};
+	int main()
+	{
+	   Distance D1(11, 10), D2;
+
+	   cout << "First Distance : ";
+	   D1.displayDistance();
+
+	   D2 = D1(10, 10, 10); // invoke operator()
+	   cout << "Second Distance :";
+	   D2.displayDistance();
+
+	   return 0;
+	}
+	当上面的代码被编译和执行时，它会产生下列结果：
+	First Distance : F: 11 I:10
+	Second Distance :F: 30 I:120
+
+下标运算符 [] 重载
+	下标操作符 [] 通常用于访问数组元素。重载该运算符用于增强操作 C++ 数组的功能。
+	下面的实例演示了如何重载下标运算符 []。
+	#include <iostream>
+	using namespace std;
+	const int SIZE = 10;
+
+	class safearay
+	{
+	   private:
+	      int arr[SIZE];
+	   public:
+	      safearay()
+	      {
+	         register int i;
+	         for(i = 0; i < SIZE; i++)
+	         {
+	           arr[i] = i;
+	         }
+	      }
+	      int& operator[](int i)
+	      {
+	          if( i >= SIZE )
+	          {
+	              cout << "索引超过最大值" <<endl;
+	              // 返回第一个元素
+	              return arr[0];
+	          }
+	          return arr[i];
+	      }
+	};
+	int main()
+	{
+	   safearay A;
+
+	   cout << "A[2] 的值为 : " << A[2] <<endl;
+	   cout << "A[5] 的值为 : " << A[5]<<endl;
+	   cout << "A[12] 的值为 : " << A[12]<<endl;
+
+	   return 0;
+	}
+	当上面的代码被编译和执行时，它会产生下列结果：
+	A[2] 的值为 : 2
+	A[5] 的值为 : 5
+	A[12] 的值为 : 索引超过最大值
+	0
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
