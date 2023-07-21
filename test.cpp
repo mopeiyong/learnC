@@ -1,46 +1,75 @@
 #include <iostream>
+#include <vector>
 using namespace std;
  
-class Distance
-{
-   private:
-      int feet;             // 0 到无穷
-      int inches;           // 0 到 12
-   public:
-      // 所需的构造函数
-      Distance(){
-         feet = 0;
-         inches = 0;
-      }
-      Distance(int f, int i){
-         feet = f;
-         inches = i;
-      }
-      // 重载小于运算符（ < ）
-      bool operator <(const Distance& d)
-      {
-         if(feet < d.feet)
-         {
-            return true;
-         }
-         if(feet == d.feet && inches < d.inches)
-         {
-            return true;
-         }
-         return false;
-      }
+// 假设一个实际的类
+class Obj {
+   static int i, j;
+public:
+   void f() const { cout << i++ << endl; }
+   void g() const { cout << j++ << endl; }
 };
-int main()
-{
-   Distance D1(11, 10), D2(5, 11);
  
-   if( D1 < D2 )
-   {
-      cout << "D1 is less than D2 " << endl;
+// 静态成员定义
+int Obj::i = 10;
+int Obj::j = 12;
+ 
+// 为上面的类实现一个容器
+class ObjContainer {
+   vector<Obj*> a;
+public:
+   void add(Obj* obj)
+   { 
+      a.push_back(obj);  // 调用向量的标准方法
    }
-   else
-   {
-      cout << "D2 is less than D1 " << endl;
+   friend class SmartPointer;
+};
+ 
+// 实现智能指针，用于访问类 Obj 的成员
+class SmartPointer {
+   ObjContainer oc;
+   int index;
+public:
+   SmartPointer(ObjContainer& objc)
+   { 
+       oc = objc;
+       index = 0;
    }
+   // 返回值表示列表结束
+   bool operator++() // 前缀版本
+   { 
+     if(index >= oc.a.size() - 1) return false;
+     if(oc.a[++index] == 0) return false;
+     return true;
+   }
+   bool operator++(int) // 后缀版本
+   { 
+      return operator++();
+   }
+   // 重载运算符 ->
+   Obj* operator->() const 
+   {
+     if(!oc.a[index])
+     {
+        cout << "Zero value";
+        return (Obj*)0;
+     }
+     return oc.a[index];
+   }
+};
+ 
+int main() {
+   const int sz = 10;
+   Obj o[sz];
+   ObjContainer oc;
+   for(int i = 0; i < sz; i++)
+   {
+       oc.add(&o[i]);
+   }
+   SmartPointer sp(oc); // 创建一个迭代器
+   do {
+      sp->f(); // 智能指针调用
+      sp->g();
+   } while(sp++);
    return 0;
 }
