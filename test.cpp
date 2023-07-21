@@ -1,75 +1,55 @@
-#include <iostream>
-#include <vector>
+#include <iostream> 
 using namespace std;
  
-// 假设一个实际的类
-class Obj {
-   static int i, j;
-public:
-   void f() const { cout << i++ << endl; }
-   void g() const { cout << j++ << endl; }
+class Shape {
+   protected:
+      int width, height;
+   public:
+      Shape( int a=0, int b=0)
+      {
+         width = a;
+         height = b;
+      }
+      virtual int area()
+      {
+         cout << "Parent class area :" <<endl;
+         return 0;
+      }
 };
- 
-// 静态成员定义
-int Obj::i = 10;
-int Obj::j = 12;
- 
-// 为上面的类实现一个容器
-class ObjContainer {
-   vector<Obj*> a;
-public:
-   void add(Obj* obj)
-   { 
-      a.push_back(obj);  // 调用向量的标准方法
-   }
-   friend class SmartPointer;
+class Rectangle: public Shape{
+   public:
+      Rectangle( int a=0, int b=0):Shape(a, b) { }
+      int area ()
+      { 
+         cout << "Rectangle class area :" <<endl;
+         return (width * height); 
+      }
 };
- 
-// 实现智能指针，用于访问类 Obj 的成员
-class SmartPointer {
-   ObjContainer oc;
-   int index;
-public:
-   SmartPointer(ObjContainer& objc)
-   { 
-       oc = objc;
-       index = 0;
-   }
-   // 返回值表示列表结束
-   bool operator++() // 前缀版本
-   { 
-     if(index >= oc.a.size() - 1) return false;
-     if(oc.a[++index] == 0) return false;
-     return true;
-   }
-   bool operator++(int) // 后缀版本
-   { 
-      return operator++();
-   }
-   // 重载运算符 ->
-   Obj* operator->() const 
-   {
-     if(!oc.a[index])
-     {
-        cout << "Zero value";
-        return (Obj*)0;
-     }
-     return oc.a[index];
-   }
+class Triangle: public Shape{
+   public:
+      Triangle( int a=0, int b=0):Shape(a, b) { }
+      int area ()
+      { 
+         cout << "Triangle class area :" <<endl;
+         return (width * height / 2); 
+      }
 };
+// 程序的主函数
+int main( )
+{
+   Shape *shape;
+   Rectangle rec(10,7);
+   Triangle  tri(10,5);
  
-int main() {
-   const int sz = 10;
-   Obj o[sz];
-   ObjContainer oc;
-   for(int i = 0; i < sz; i++)
-   {
-       oc.add(&o[i]);
-   }
-   SmartPointer sp(oc); // 创建一个迭代器
-   do {
-      sp->f(); // 智能指针调用
-      sp->g();
-   } while(sp++);
+   // 存储矩形的地址
+   shape = &rec;
+   // 调用矩形的求面积函数 area
+   shape->area();
+ 
+   // 存储三角形的地址
+   shape = &tri;
+   // 调用三角形的求面积函数 area
+   shape->area();
+   
    return 0;
 }
